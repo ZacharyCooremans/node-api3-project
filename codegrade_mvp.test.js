@@ -146,6 +146,6 @@ describe('server.js', () => {
     test('[24] responds with the correct error message if missing text', async () => {
       let res = await request(server).post('/api/users/1/posts').send({ no: 'foo' })
       expect(res.body.message).toMatch(/missing required text/i)
-    }, 500)
+    })
   })
 })
