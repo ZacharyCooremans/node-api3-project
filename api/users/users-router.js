@@ -37,6 +37,7 @@ router.post('/', validateUser, (req, res, next) => {
   .catch(next)
 });
 
+// [PUT] a news data
 router.put('/:id', validateUserId, validateUser, (req, res, next) => {
   // RETURN THE FRESHLY UPDATED USER OBJECT
   // this needs a middleware to verify user id
@@ -51,6 +52,7 @@ router.put('/:id', validateUserId, validateUser, (req, res, next) => {
   .catch(next)
 });
 
+// [DELETE] a user
 router.delete('/:id', validateUserId, async(req, res, next) => {
   // RETURN THE FRESHLY DELETED USER OBJECT
   // this needs a middleware to verify user id
@@ -73,10 +75,19 @@ router.get('/:id/posts', validateUserId, async (req, res, next) => {
   }
 });
 
-router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
+router.post('/:id/posts', validateUserId, validatePost, async (req, res, next) => {
   // RETURN THE NEWLY CREATED USER POST
   // this needs a middleware to verify user id
   // and another middleware to check that the request body is valid
+  try {
+    const result = await Posts.insert({
+      user_id: req.params.id,
+      text: req.text
+    })
+    res.status(201).json(result)
+  } catch (err) {
+    next(err)
+  }
 });
 
 router.use((err, req, res, next) => { // eslint-disable-line
